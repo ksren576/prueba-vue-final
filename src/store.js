@@ -138,8 +138,17 @@ const store = new Vuex.Store({
         price: Number(pizza.price),
         ing: pizza.ing.map((el) => ({ name: el })),
       }
-      await db.collection("productos").add(pizzaFormateada);
-      context.commit("agregarPizza", pizzaFormateada);
+
+      const res = await db.collection("productos").where("id", "==", pizza.id).get();
+
+      if (res.size === 0) {
+        await db.collection("productos").add(pizzaFormateada);
+        context.commit("agregarPizza", pizzaFormateada);
+        return true;
+      } else {
+        alert(`El ID ${pizza.id} ya existe en la base de datos`);
+        return false;
+      }
     },
     async eliminarProducto(context, docId) {
       await db.collection("productos").doc(docId).delete();

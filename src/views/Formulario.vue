@@ -164,8 +164,20 @@ export default {
     ...mapActions(["agregarPizza"]),
     async guardar() {
       this.loading = true;
-      await this.agregarPizza(this.pizza);
+      const res = await this.agregarPizza(this.pizza);
       this.loading = false;
+      if (res) {
+        this.pizza = {
+          name: "",
+          price: "",
+          stock: "",
+          img: "",
+          id: "",
+          desc: "",
+          ing: [],
+        };
+        this.$router.push("/inventario");
+      }
     },
   },
 };
